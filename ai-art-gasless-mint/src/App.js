@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import { NFTStorage } from "nft.storage";
-
+import loader from './assests/loader.svg'
 function App() {
   const [prompt,setPrompt]= useState("")
   const [imageBlob, setImageBlob]= useState(null)
@@ -13,6 +13,9 @@ function App() {
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [minted, setMinted] = useState(false);
+
+
+
   const generateArt=async()=>{
     setLoading(true)
     try{
@@ -71,9 +74,11 @@ return null
 }
 const mintNft = async () => {
   try {
+setLoading(true)
     const imageURL = await uploadArtToIpfs();
     console.log("URL ", imageURL)
     // mint as an NFT on nftport
+ 
     const response = await axios.post(
       `https://api.nftport.xyz/v0/mints/easy/urls`,
       {
@@ -94,6 +99,7 @@ const mintNft = async () => {
       }
     );
     const data = await response.data;
+setLoading(false)
     setMinted(true)
     console.log(data);
   } catch (err) {
@@ -102,11 +108,12 @@ const mintNft = async () => {
 };
 useEffect(()=>{
 setMinted(false)
-},[imageBlob])
+},[file])
+
 
   return (
 
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-emerald-900">
     <h1 className="text-4xl font-extrabold">AI Art Gasless mints</h1>
     <div className="flex flex-col items-center justify-center">
       {/* Create an input box and button saying next beside it */}
@@ -123,10 +130,13 @@ setMinted(false)
         >
           Next
         </button>
-        {loading && <p>Loading...</p>}
+        {loading && (  <div className="fixed inset-0 z-10 h-screen bg-[rgba(0,0,0,0.7)] flex items-center justify-center flex-col">
+      <img src={loader} alt="loader" className="w-[100px] h-[100px] object-contain"/>
+     
+    </div>)}
       </div>
       {imageBlob && (
-        <div className="flex flex-col gap-4 items-center justify-center">
+        <div className="flex flex-col gap-4 items-center justify-center mt-4">
           <img src={imageBlob} alt="AI generated art" />
           {
             minted ? <p>Minted this NFT</p> : (
@@ -164,6 +174,9 @@ setMinted(false)
           }
         </div>
       )}
+      <div className='mt-4 uppercase'>
+          <p className='font-bold'>Go to opensea.io to view your minted NFTS</p>
+      </div>
     </div>
   </div>
   );
