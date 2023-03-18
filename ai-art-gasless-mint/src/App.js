@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios'
 import { NFTStorage } from "nft.storage";
 
@@ -100,6 +100,9 @@ const mintNft = async () => {
     console.log(err);
   }
 };
+useEffect(()=>{
+setMinted(false)
+},[imageBlob])
 
   return (
 
