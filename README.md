@@ -1,3 +1,3 @@
 # mint-App
 
-GO TO ai-nft-mint-app.vercel.app 
+GO TO https://ai-nft-mint-app.vercel.app 
